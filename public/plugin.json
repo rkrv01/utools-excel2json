@@ -1,0 +1,14 @@
+{
+  "main": "../index.html",
+  "logo": "logo.png",
+  "development": {
+    "main": "http://127.0.0.1:3000"
+  },
+  "features": [
+    {
+      "code": "Excel2Json",
+      "explain": "Excel2Json",
+      "cmds": ["Excel2Json"]
+    }
+  ]
+}
