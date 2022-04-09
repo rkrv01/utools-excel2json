@@ -43,7 +43,6 @@
 
 <script setup>
 import { UploadFilled } from "@element-plus/icons-vue";
-import { onMounted } from "vue";
 
 import useCopy from "./useCopy";
 import useHeightLight from "./useHeightLight";
