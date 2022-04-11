@@ -1,35 +1,39 @@
 <template>
-  <el-container class="p-20px h-100vh box-border">
-    <el-card class="app-card w-full h-full">
-      <template #header>
-        <!-- <el-button type="primary">上传excel</el-button> -->
-        <el-upload
-          class="uploader-container"
-          drag
-          action="http://127.0.0.1:3000"
-          multiple
-          accept=".xls,.xlsx"
-        >
-          <div
-            class="el-upload__text h-full flex flex-col justify-center items-center"
-          >
-            <el-icon :size="30">
-              <upload-filled />
-            </el-icon>
-            <p>拖拽文件在这或 <em>点击上传</em></p>
-          </div>
-        </el-upload>
-      </template>
+  <div class="p-20px h-100vh box-border">
+    <div class="app-card w-full h-full">
+      <div class="card-header">
+        <div class="uploader-container">
+          <n-upload action="http://127.0.0.1:3000" accept=".xls,.xlsx">
+            <n-upload-dragger>
+              <div class="mb-8px">
+                <n-icon size="30" :depth="3">
+                  <archive-icon />
+                </n-icon>
+              </div>
+              <n-text class="text-size-[16px]">
+                点击或者拖动文件到该区域来上传
+              </n-text>
+              <n-p depth="3" class="mt-8px">
+                支持上传.xls 或 .xlsx格式的文件
+              </n-p>
+            </n-upload-dragger>
+          </n-upload>
+        </div>
+      </div>
+      <n-divider />
       <div class="result h-full flex flex-col">
         <p class="mb-5px">
           输出结果
-          <el-button
+          <n-button
             size="small"
-            type="primary"
+            strong
+            secondary
+            type="info"
             class="copy-text-btn ml-10px"
             :data-clipboard-text="jsonValue"
-            >{{ copyBtnText }}</el-button
           >
+            {{ copyBtnText }}
+          </n-button>
         </p>
         <HighLightJs
           language="json"
@@ -37,12 +41,12 @@
           class="json-container flex-1 overflow-y-auto"
         />
       </div>
-    </el-card>
-  </el-container>
+    </div>
+  </div>
 </template>
 
 <script setup>
-import { UploadFilled } from "@element-plus/icons-vue";
+import { FileExcelTwotone as ArchiveIcon } from "@vicons/antd";
 
 import useCopy from "./useCopy";
 import useHeightLight from "./useHeightLight";
@@ -60,23 +64,23 @@ onMounted(() => {
 <style scoped lang="scss">
 // 卡片样式
 .app-card {
-  :deep() {
-    display: flex;
-    flex-direction: column;
-    .el-card__body {
-      flex: 1;
-      overflow: hidden;
-    }
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  box-shadow: 0 0 12px 0px rgba($color: #000000, $alpha: .25);
+  
+  .result {
+    flex: 1;
+    overflow: hidden;
   }
 }
 //上传文件容器
 .uploader-container {
   :deep() {
-    .el-upload {
+    .n-upload-trigger {
       width: 100%;
-      .el-upload-dragger {
-        width: 100%;
-        height: 100px;
+      .n-upload-dragger {
+        padding: 10px;
       }
     }
   }
