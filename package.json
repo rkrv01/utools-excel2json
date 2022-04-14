@@ -26,6 +26,7 @@
     "vfonts": "0.0.3",
     "vite": "^2.9.0",
     "vite-plugin-windicss": "^1.8.3",
-    "windicss": "^3.5.1"
+    "windicss": "^3.5.1",
+    "xlsx": "^0.15.6"
   }
 }

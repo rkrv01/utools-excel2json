@@ -6,9 +6,9 @@
   },
   "features": [
     {
-      "code": "Excel2Json",
-      "explain": "Excel2Json",
-      "cmds": ["Excel2Json"]
+      "code": "Excel转Json",
+      "explain": "excel转换，输出json格式，支持.xls、.xlsx格式",
+      "cmds": ["Excel2Json", "Excel转Json", "xlsx"]
     }
   ]
 }
