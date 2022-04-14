@@ -6,4 +6,6 @@ import 'virtual:windi.css'
 
 const app = createApp(App)
 
+// app.use(hljsVuePlugin)
+
 app.mount('#app')

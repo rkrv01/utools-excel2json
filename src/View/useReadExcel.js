@@ -1,9 +1,12 @@
-/**自定义转换文件 */
+/**TODO: 体积优化 读取excel转化为json */
 import XLSX from "xlsx";
+// import { read as XLSXRead, utils as XLSXUtils } from 'xlsx'
 // import { fixdata } from "@/utils"
 import { useNotification } from "naive-ui";
 
-export default function () {
+const XLSXRead = XLSX.read,
+XLSXUtils = XLSX.utils;
+export default function (showMainWindow) {
     //是否将文件读取为二进制字符串
     const rABS = false;
     // 源信息
@@ -16,8 +19,9 @@ export default function () {
 
     const notification = useNotification();
 
-    /**文件转换变化回调 */
+    /**文件上传变化回调 */
     function fileChangeHandler(data) {
+        showMainWindow()
         const { file } = data.file;
         const verifyRes = fileVerification(file);
         if (verifyRes) {
@@ -33,7 +37,6 @@ export default function () {
 
     /**解析前校验 */
     function fileVerification(file) {
-        console.log(file);
         const { size, name } = file;
         // 格式验证
         const reg = /\.xlsx$|\.xls$/;
@@ -103,12 +106,12 @@ export default function () {
     function getSheetDatas(data) {
         let excelInfo;
         if (rABS) {
-            // excelInfo = XLSX.read(btoa(fixdata(data)), {
+            // excelInfo = XLSXRead(btoa(fixdata(data)), {
             //     // 手动转化
             //     type: "base64"
             // });
         } else {
-            excelInfo = XLSX.read(data, {
+            excelInfo = XLSXRead(data, {
                 type: "binary"
             });
         }
@@ -117,7 +120,7 @@ export default function () {
         let sheetDatas = [];
         // 查询全部数据
         SheetNames.forEach(name => {
-            const data = XLSX.utils.sheet_to_json(
+            const data = XLSXUtils.sheet_to_json(
                 Sheets[name]
             );
             sheetDatas.push({ sheetName: name, data });
@@ -136,7 +139,7 @@ export default function () {
         })
 
         excelvalue.value = tempObj;
-        if (isFormatter) {
+        if (isFormatter.value) {
             return JSON.stringify(tempObj, null, 2);
         } else {
             return JSON.stringify(tempObj);
@@ -146,9 +149,9 @@ export default function () {
     /**切换格式化状态 */
     function switchFormatterStateHadnler(isFormatter) {
         if (isFormatter) {
-            jsonValue.value = JSON.stringify(excelvalue, null, 2);
+            jsonValue.value = JSON.stringify(excelvalue.value, null, 2);
         } else {
-            jsonValue.value = JSON.stringify(excelvalue);
+            jsonValue.value = JSON.stringify(excelvalue.value);
         }
     }
 

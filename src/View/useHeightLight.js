@@ -1,8 +1,10 @@
 /**代码高亮 */
-import "highlight.js/lib/common";
+import hljs from 'highlight.js/lib/core';
+import json from 'highlight.js/lib/languages/json';
 import hljsVuePlugin from "@highlightjs/vue-plugin";
-// 样式文件
 import("highlight.js/styles/atom-one-light.css");
+hljs.registerLanguage('json', json);
+// 样式文件
 
 export default function () {
     // 高亮组件

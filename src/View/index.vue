@@ -1,67 +1,66 @@
 <template>
-    <div class="p-20px h-100vh box-border">
-      <div class="app-card w-full h-full">
-        <div class="card-header">
-          <div class="uploader-container">
-            <n-upload
-              accept=".xls,.xlsx"
-              :default-upload="false"
-              :show-file-list="false"
-              :on-change="fileChangeHandler"
-              :theme-overrides="themeOverrides"
-            >
-              <n-upload-dragger>
-                <div class="mb-8px">
-                  <n-icon size="30" :depth="3">
-                    <archive-icon />
-                  </n-icon>
-                </div>
-                <n-text class="text-size-[16px]">
-                  点击或者拖动文件到该区域
-                </n-text>
-                <n-p depth="3" class="mt-8px">
-                  支持转换.xls 或 .xlsx格式的文件
-                </n-p>
-              </n-upload-dragger>
-            </n-upload>
-          </div>
-        </div>
-
-        <n-divider />
-
-        <div class="result h-full flex flex-col">
-          <div class="mb-5px flex items-center">
-            <label class="ml-10px">
-              json格式化
-              <n-switch
-                v-model:value="isFormatter"
-                :theme-overrides="themeOverrides"
-                :disabled="!jsonValue"
-                @update:value="switchFormatterStateHadnler"
-              />
-            </label>
-            <n-button
-              size="small"
-              strong
-              secondary
-              type="info"
-              class="copy-text-btn ml-50px"
-              :data-clipboard-text="jsonValue"
-              :disabled="!jsonValue"
-            >
-              {{ copyBtnText }}
-            </n-button>
-
-          </div>
-          <!-- 输出json代码 -->
-          <HighLightJs
-            language="json"
-            :code="jsonValue"
-            class="json-container flex-1 overflow-y-auto"
-          />
+  <div class="p-20px h-100vh box-border">
+    <div class="app-card w-full h-full">
+      <div class="card-header">
+        <div class="uploader-container">
+          <n-upload
+            accept=".xls,.xlsx"
+            :default-upload="false"
+            :show-file-list="false"
+            :on-change="fileChangeHandler"
+            :theme-overrides="themeOverrides"
+          >
+            <n-upload-dragger>
+              <div class="mb-8px">
+                <n-icon size="30" :depth="3">
+                  <archive-icon />
+                </n-icon>
+              </div>
+              <n-text class="text-size-[16px]">
+                点击或者拖动文件到该区域
+              </n-text>
+              <n-p depth="3" class="mt-8px">
+                支持转换.xls 或 .xlsx格式的文件
+              </n-p>
+            </n-upload-dragger>
+          </n-upload>
         </div>
       </div>
+
+      <n-divider />
+
+      <div class="result h-full flex flex-col">
+        <div class="mb-5px flex items-center">
+          <label class="ml-10px">
+            json格式化
+            <n-switch
+              v-model:value="isFormatter"
+              :theme-overrides="themeOverrides"
+              :disabled="!jsonValue"
+              @update:value="switchFormatterStateHadnler"
+            />
+          </label>
+          <n-button
+            size="small"
+            strong
+            secondary
+            type="info"
+            class="copy-text-btn ml-50px"
+            :data-clipboard-text="jsonValue"
+            :disabled="!jsonValue"
+          >
+            {{ copyBtnText }}
+          </n-button>
+        </div>
+        <!-- 输出json代码 -->
+        <HighLightJs
+          language="json"
+          :code="jsonValue"
+          class="json-container flex-1 overflow-y-auto"
+        />
+      </div>
     </div>
+  </div>
 </template>
 
 <script setup>
@@ -70,7 +69,10 @@ import { FileExcelTwotone as ArchiveIcon } from "@vicons/antd";
 import useCopy from "./useCopy";
 import useHeightLight from "./useHeightLight";
 import useReadExcel from "./useReadExcel";
+import useUtools from "./useUtools";
+
 const { HighLightJs } = useHeightLight();
+const { showMainWindow } = useUtools();
 const { copyBtnText, initClipboard } = useCopy();
 
 const {
@@ -78,7 +80,7 @@ const {
   jsonValue,
   fileChangeHandler,
   switchFormatterStateHadnler,
-} = useReadExcel();
+} = useReadExcel(showMainWindow);
 
 /**主题配置 */
 const themeOverrides = {
@@ -86,7 +88,6 @@ const themeOverrides = {
     primaryColor: "#25b39e",
   },
 };
-
 
 onMounted(() => {
   initClipboard();
