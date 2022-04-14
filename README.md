@@ -1,7 +1,14 @@
-# Vue 3 + Vite
+# utools-Excel2Json
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+> 选择 excel 文件，转换输出 json 格式；可选择格式化 json 数据，一键复制
 
-## Recommended IDE Setup
+## 技术栈
 
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+vue3 + vite2
+
+## 版本记录
+
+### v1.0.0
+
+- 选择 excel 文件，转换输出 json 格式；
+- 可选择格式化 json 数据，一键复制
