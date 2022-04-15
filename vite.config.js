@@ -8,7 +8,7 @@ import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    base: './',
+    base: '/utools-excel2-json',
     plugins: [
         vue(),
         WindiCSS(),
