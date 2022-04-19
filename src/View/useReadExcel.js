@@ -1,27 +1,22 @@
-/**TODO: 体积优化 读取excel转化为json */
-import XLSX from "xlsx";
-// import { read as XLSXRead, utils as XLSXUtils } from 'xlsx'
-// import { fixdata } from "@/utils"
-import { useNotification } from "naive-ui";
+/**体积优化 读取excel转化为json */
+import { read as XLSXRead, utils as XLSXUtils } from "xlsx";
 
-const XLSXRead = XLSX.read,
-XLSXUtils = XLSX.utils;
-export default function (showMainWindow) {
+import { useNotification, useLoadingBar } from "naive-ui";
+
+export default function (exportNameValue) {
     //是否将文件读取为二进制字符串
     const rABS = false;
     // 源信息
-    const excelvalue = ref({});
-    // json值信息
-    const jsonValue = ref("");
-
-    // 自动格式化
-    const isFormatter = ref(true)
-
+    const excelvalue = ref(null);
+    // sheets信息
+    const sheetNames = ref([])
+    // 通知
     const notification = useNotification();
+    // 加载进度
+    const loadingBar = useLoadingBar()
 
     /**文件上传变化回调 */
-    function fileChangeHandler(data) {
-        showMainWindow()
+    function runFileRead(data) {
         const { file } = data.file;
         const verifyRes = fileVerification(file);
         if (verifyRes) {
@@ -65,16 +60,18 @@ export default function (showMainWindow) {
     function renderFile(file) {
         const reader = new FileReader();
         // 导入时
-        // reader.onprogress = e => {
-        //     console.log("导入时:", e);
-        // };
+        reader.onprogress = e => {
+            loadingBar.start()
+        };
 
         // 导入完成
         reader.onload = e => {
             try {
                 const data = e.target.result;
-                const sheetDatas = getSheetDatas(data)
-                jsonValue.value = integrationSheetDataToJson(sheetDatas);
+                excelvalue.value = getSheetDatas(data)
+                // excelvalue.value = integrationSheetData(sheetDatas);
+                console.log("导入excel信息完成:", excelvalue.value);
+                loadingBar.finish()
             } catch (error) {
                 console.error(error);
                 notification.error({
@@ -82,8 +79,8 @@ export default function (showMainWindow) {
                     meta: "转换的文件有误,请检查文件后重新转换",
                     duration: 3000
                 });
+                loadingBar.error()
             }
-
         }
 
         if (rABS) {
@@ -102,7 +99,7 @@ export default function (showMainWindow) {
         }
     }
 
-    /**读取excel sheets数据 */
+    /**读取excel各sheets数据 */
     function getSheetDatas(data) {
         let excelInfo;
         if (rABS) {
@@ -117,47 +114,24 @@ export default function (showMainWindow) {
         }
         const { Sheets, SheetNames } = excelInfo;
 
-        let sheetDatas = [];
+        let sheetDatas = {};
+        sheetNames.value = SheetNames;
+        // chooseAllSheetName()
+        // 默认选中所有表
+        exportNameValue.value = SheetNames;
         // 查询全部数据
         SheetNames.forEach(name => {
             const data = XLSXUtils.sheet_to_json(
                 Sheets[name]
             );
-            sheetDatas.push({ sheetName: name, data });
+            sheetDatas[name] = data
         });
-
         return sheetDatas;
-
-    }
-
-    /**整合json数据 */
-    function integrationSheetDataToJson(sheetDatas) {
-        let tempObj = {};
-        sheetDatas.forEach(item => {
-            const { sheetName, data } = item;
-            tempObj[sheetName] = data
-        })
-
-        excelvalue.value = tempObj;
-        if (isFormatter.value) {
-            return JSON.stringify(tempObj, null, 2);
-        } else {
-            return JSON.stringify(tempObj);
-        }
-    }
-
-    /**切换格式化状态 */
-    function switchFormatterStateHadnler(isFormatter) {
-        if (isFormatter) {
-            jsonValue.value = JSON.stringify(excelvalue.value, null, 2);
-        } else {
-            jsonValue.value = JSON.stringify(excelvalue.value);
-        }
     }
 
     return {
-        isFormatter,
-        jsonValue,
-        fileChangeHandler, switchFormatterStateHadnler
+        runFileRead,
+        sheetNames,
+        excelvalue
     }
 }

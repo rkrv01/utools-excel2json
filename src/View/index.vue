@@ -30,34 +30,51 @@
       <n-divider />
 
       <div class="result h-full flex flex-col">
-        <div class="mb-5px flex items-center">
-          <label class="ml-10px">
-            json格式化
-            <n-switch
-              v-model:value="isFormatter"
-              :theme-overrides="themeOverrides"
+        <div class="mb-5px flex justify-between">
+          <div class="options-left flex items-center">
+            <label class="ml-10px">
+              json格式化
+              <n-switch
+                v-model:value="isFormatter"
+                :theme-overrides="themeOverrides"
+                :disabled="!jsonValue"
+              />
+            </label>
+            <n-button
+              size="small"
+              strong
+              secondary
+              type="info"
+              class="copy-text-btn ml-50px"
+              :data-clipboard-text="jsonValue"
               :disabled="!jsonValue"
-              @update:value="switchFormatterStateHadnler"
+            >
+              {{ copyBtnText }}
+            </n-button>
+          </div>
+          <div class="options-right flex items-center">
+            <!-- <span>导出指定表</span> -->
+            <n-select
+              class="ml-10px w-300px"
+              clearable
+              multiple
+              placeholder="指定表名转换"
+              v-model:value="exportNameValue"
+              :options="exportNameOptions"
+              v-show="exportNameOptions.length"
             />
-          </label>
-          <n-button
-            size="small"
-            strong
-            secondary
-            type="info"
-            class="copy-text-btn ml-50px"
-            :data-clipboard-text="jsonValue"
-            :disabled="!jsonValue"
-          >
-            {{ copyBtnText }}
-          </n-button>
+          </div>
         </div>
         <!-- 输出json代码 -->
         <HighLightJs
+          v-if="isFormatter"
           language="json"
           :code="jsonValue"
           class="json-container flex-1 overflow-y-auto"
         />
+        <pre v-else class="json-container flex-1 overflow-y-auto">{{
+          jsonValue
+        }}</pre>
       </div>
     </div>
   </div>
@@ -70,17 +87,30 @@ import useCopy from "./useCopy";
 import useHeightLight from "./useHeightLight";
 import useReadExcel from "./useReadExcel";
 import useUtools from "./useUtools";
+import useShowJson from "./useShowJson";
+
+// 自动格式化
+const isFormatter = ref(true);
+// 导出表名
+const exportNameValue = ref([]);
 
 const { HighLightJs } = useHeightLight();
 const { showMainWindow } = useUtools();
 const { copyBtnText, initClipboard } = useCopy();
 
-const {
-  isFormatter,
-  jsonValue,
-  fileChangeHandler,
-  switchFormatterStateHadnler,
-} = useReadExcel(showMainWindow);
+const { runFileRead, sheetNames, excelvalue } =
+  useReadExcel(exportNameValue);
+const { jsonValue } = useShowJson(isFormatter, excelvalue, exportNameValue);
+
+// 可选表名
+const exportNameOptions = computed(() => {
+  return sheetNames.value.map((item) => {
+    return {
+      label: item,
+      value: item,
+    };
+  });
+});
 
 /**主题配置 */
 const themeOverrides = {
@@ -88,6 +118,15 @@ const themeOverrides = {
     primaryColor: "#25b39e",
   },
 };
+
+/**文件上传变化回调 */
+function fileChangeHandler(data) {
+  // 跳回主窗口
+  showMainWindow();
+  // 文件校验及转换
+  runFileRead(data);
+}
+
 
 onMounted(() => {
   initClipboard();
