@@ -116,8 +116,6 @@ export default function (exportNameValue) {
 
         let sheetDatas = {};
         sheetNames.value = SheetNames;
-        // chooseAllSheetName()
-        // 默认选中所有表
         exportNameValue.value = SheetNames;
         // 查询全部数据
         SheetNames.forEach(name => {

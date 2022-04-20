@@ -66,15 +66,18 @@
           </div>
         </div>
         <!-- 输出json代码 -->
+        <!-- 压缩单行超过一万字符的代码不高亮显示 -->
+        <pre
+          v-if="!isFormatter && jsonValue.length > 10000"
+          class="json-container flex-1 overflow-y-auto"
+          >{{ jsonValue }}</pre
+        >
         <HighLightJs
-          v-if="isFormatter"
+          v-else
           language="json"
           :code="jsonValue"
           class="json-container flex-1 overflow-y-auto"
         />
-        <pre v-else class="json-container flex-1 overflow-y-auto">{{
-          jsonValue
-        }}</pre>
       </div>
     </div>
   </div>
@@ -95,11 +98,12 @@ const isFormatter = ref(true);
 const exportNameValue = ref([]);
 
 const { HighLightJs } = useHeightLight();
-const { showMainWindow } = useUtools();
 const { copyBtnText, initClipboard } = useCopy();
 
-const { runFileRead, sheetNames, excelvalue } =
-  useReadExcel(exportNameValue);
+const { runFileRead, sheetNames, excelvalue } = useReadExcel(exportNameValue);
+
+const { showMainWindow } = useUtools(sheetNames, excelvalue,exportNameValue);
+
 const { jsonValue } = useShowJson(isFormatter, excelvalue, exportNameValue);
 
 // 可选表名
@@ -126,7 +130,6 @@ function fileChangeHandler(data) {
   // 文件校验及转换
   runFileRead(data);
 }
-
 
 onMounted(() => {
   initClipboard();
