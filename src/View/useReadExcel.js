@@ -4,8 +4,7 @@ import { read as XLSXRead, utils as XLSXUtils } from "xlsx";
 import { useNotification, useLoadingBar } from "naive-ui";
 
 export default function (exportNameValue) {
-    //是否将文件读取为二进制字符串
-    const rABS = false;
+
     // 源信息
     const excelvalue = ref(null);
     // sheets信息
@@ -56,33 +55,11 @@ export default function (exportNameValue) {
 
     }
 
-    /**读取文件信息 */
+    /** web读取文件信息 */
     function renderFile(file) {
+        //是否将文件读取为二进制字符串
+        const rABS = false;
         const reader = new FileReader();
-        // 导入时
-        reader.onprogress = e => {
-            loadingBar.start()
-        };
-
-        // 导入完成
-        reader.onload = e => {
-            try {
-                const data = e.target.result;
-                excelvalue.value = getSheetDatas(data)
-                // excelvalue.value = integrationSheetData(sheetDatas);
-                console.log("导入excel信息完成:", excelvalue.value);
-                loadingBar.finish()
-            } catch (error) {
-                console.error(error);
-                notification.error({
-                    title: "转换失败",
-                    meta: "转换的文件有误,请检查文件后重新转换",
-                    duration: 3000
-                });
-                loadingBar.error()
-            }
-        }
-
         if (rABS) {
             /**
              * 用于启动读取指定的 Blob 或 File 内容。当读取操作完成时，readyState 变成 DONE（已完成），
@@ -97,21 +74,54 @@ export default function (exportNameValue) {
              */
             reader.readAsBinaryString(file);
         }
+
+        // 导入时
+        reader.onprogress = e => {
+            loadingBar.start()
+        };
+
+        // 导入完成
+        reader.onload = e => {
+            try {
+                const data = e.target.result;
+                excelvalue.value = getSheetDatas(data, rABS)
+                // excelvalue.value = integrationSheetData(sheetDatas);
+                console.log("导入excel信息完成:", excelvalue.value);
+                loadingBar.finish()
+            } catch (error) {
+                console.error(error);
+                notification.error({
+                    title: "转换失败",
+                    meta: "转换的文件有误,请检查文件后重新转换",
+                    duration: 3000
+                });
+                loadingBar.error()
+            }
+        }
+    }
+
+    /**node读取文件信息 */
+    function renderFileByNode(rbuf) {
+        console.log("mode读取文件信息:",rbuf);
+        excelvalue.value = getSheetDatas(rbuf, true)
+        console.log("导入excel信息完成:", excelvalue.value);
     }
 
     /**读取excel各sheets数据 */
-    function getSheetDatas(data) {
+    function getSheetDatas(data,rABS = false) {
         let excelInfo;
         if (rABS) {
             // excelInfo = XLSXRead(btoa(fixdata(data)), {
             //     // 手动转化
             //     type: "base64"
             // });
+            excelInfo = XLSXRead(data)
         } else {
             excelInfo = XLSXRead(data, {
                 type: "binary"
             });
         }
+
         const { Sheets, SheetNames } = excelInfo;
 
         let sheetDatas = {};
@@ -130,6 +140,7 @@ export default function (exportNameValue) {
     return {
         runFileRead,
         sheetNames,
-        excelvalue
+        excelvalue,
+        renderFileByNode
     }
 }

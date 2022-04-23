@@ -100,9 +100,15 @@ const exportNameValue = ref([]);
 const { HighLightJs } = useHeightLight();
 const { copyBtnText, initClipboard } = useCopy();
 
-const { runFileRead, sheetNames, excelvalue } = useReadExcel(exportNameValue);
+const { runFileRead, sheetNames, excelvalue, renderFileByNode } =
+  useReadExcel(exportNameValue);
 
-const { showMainWindow } = useUtools(sheetNames, excelvalue,exportNameValue);
+const { showMainWindow } = useUtools(
+  sheetNames,
+  excelvalue,
+  exportNameValue,
+  renderFileByNode
+);
 
 const { jsonValue } = useShowJson(isFormatter, excelvalue, exportNameValue);
 

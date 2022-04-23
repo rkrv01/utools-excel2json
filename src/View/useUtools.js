@@ -2,7 +2,7 @@
 import { onMounted } from "vue"
 const utools = window.utools;
 
-export default function (sheetNames, excelvalue, exportNameValue) {
+export default function (sheetNames, excelvalue, exportNameValue, renderFileByNode) {
 
     /**初始化utools */
     function initUtoolsEvent() {
@@ -25,10 +25,15 @@ export default function (sheetNames, excelvalue, exportNameValue) {
     /**获取复制的文件或文件夹 */
     function getCopyedFiles(path) {
         try {
-            const result = window.getExcelFileByPath(path)
-            sheetNames.value = result.sheetNames;
-            exportNameValue.value = result.sheetNames;
-            excelvalue.value = result.sheetDatas;
+            // 方案一： 直接赋值node解析的excel信息，缺：需要node再引入一次xlsx 应用增大
+            // const result = window.getExcelFileByPath(path)
+            // sheetNames.value = result.sheetNames;
+            // exportNameValue.value = result.sheetNames;
+            // excelvalue.value = result.sheetDatas;
+
+            // 方案二： 拿到node读取的buffer 交由web 解析excel
+            const rbuf = window.getFileBufferByPath(path)
+            renderFileByNode(rbuf)
         } catch (error) {
             console.log(error);
             sheetNames.value = ["error"];
