@@ -1,0 +1,16 @@
+:root {
+    --color_fff: #ffffff;
+    --color_333: #333333;
+    --scrollbar_color   : rgba(0, 0, 0, .2);
+}
+
+@media screen and (prefers-color-scheme: dark) {
+
+    // 暗色模式变量
+    :root {
+        --color_fff      : #282c34;
+        --color_333      : #cccc;
+        --scrollbar_color: rgba(255, 255, 255, .2)
+    }
+
+}

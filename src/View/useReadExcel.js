@@ -86,7 +86,6 @@ export default function (exportNameValue) {
                 const data = e.target.result;
                 excelvalue.value = getSheetDatas(data, rABS)
                 // excelvalue.value = integrationSheetData(sheetDatas);
-                console.log("导入excel信息完成:", excelvalue.value);
                 loadingBar.finish()
             } catch (error) {
                 console.error(error);
@@ -137,10 +136,21 @@ export default function (exportNameValue) {
         return sheetDatas;
     }
 
+    /**清空转换结果 */
+    function clearResult(){
+        // 清空json原始数据
+        excelvalue.value = null
+        // 清空可选择表名
+        sheetNames.value = [];
+        // 清空已选择表名
+        exportNameValue.value = []
+    }
+
     return {
-        runFileRead,
         sheetNames,
         excelvalue,
-        renderFileByNode
+        runFileRead,
+        renderFileByNode,
+        clearResult
     }
 }

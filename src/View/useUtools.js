@@ -45,7 +45,6 @@ export default function (sheetNames, excelvalue, exportNameValue, renderFileByNo
     }
 
     onMounted(() => {
-        console.log("useUtools onMounted");
         utools && initUtoolsEvent();
     })
 
