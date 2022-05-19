@@ -1,5 +1,5 @@
 /**
- * @name: TODO: 有报错 文件流转BinaryString
+ * @name: TODO: 有报错，文件流转BinaryString
  * @param {type}
  * @return:
  */
