@@ -26,10 +26,29 @@
   background   : var(--color_fff);
 }
 
+@font-face {
+  font-display: swap;
+  font-family: 'Inter';
+  src: url('https://vkceyugu.cdn.bspapp.com/VKCEYUGU-be392405-5b88-4143-ad6b-f155b106ab85/84b9b260-9c21-4b60-9a4c-e7a4312fc862.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'ZhanKuWenYiTi';
+  src: url('https://vkceyugu.cdn.bspapp.com/VKCEYUGU-be392405-5b88-4143-ad6b-f155b106ab85/f6e5290e-da0b-4005-aa05-9c29bf440a87.ttf') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'STHeiti-Light-3';
+  src: url('https://vkceyugu.cdn.bspapp.com/VKCEYUGU-be392405-5b88-4143-ad6b-f155b106ab85/92511267-a613-4766-bcae-19230fee8aa2.ttc') format('woff2');
+}
 
 body {
   background: var(--color_fff);
   color     : var(--color_333);
+  font-family: 'Inter','STHeiti-Light-3', 'HarmonyOS Sans SC', 'HarmonyOS', system-ui,
+  —apple-system, Segoe UI, Rototo, Emoji, Helvetica, Arial, sans-serif !important;
 }
 
 
