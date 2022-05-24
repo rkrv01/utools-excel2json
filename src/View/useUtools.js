@@ -22,6 +22,12 @@ export default function (sheetNames, excelvalue, exportNameValue, renderFileByNo
         utools && utools.showMainWindow();
     }
 
+    /**隐藏主窗口 */
+    function hideMainWindow() {
+        //执行该方法将会隐藏 uTools 主窗口，包括此时正在主窗口运行的插件，分离的插件不会被隐藏。 
+        utools && utools.hideMainWindow();
+    }
+
     /**获取复制的文件或文件夹 */
     function getCopyedFiles(path) {
         try {
@@ -49,6 +55,7 @@ export default function (sheetNames, excelvalue, exportNameValue, renderFileByNo
     })
 
     return {
-        showMainWindow
+        showMainWindow,
+        hideMainWindow
     }
 }
