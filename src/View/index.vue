@@ -45,13 +45,19 @@
           
               <!-- 复制结果 -->
               <n-button size="small" strong secondary  type="primary" class="copy-text-btn ml-10px" :data-clipboard-text="jsonValue"
-                :disabled="!jsonValue">
+                :disabled="!jsonValue" >
                 {{ copyBtnText }}
+              </n-button>
+
+              <!-- JSON编辑器 -->
+              <n-button size="small" strong secondary  type="primary" class="ml-10px" 
+                :disabled="!jsonValue" @click="toJSONEditHandler" >
+                JSON编辑器
               </n-button>
 
               <!--  清空结果 -->
               <n-button size="small" strong secondary  type="error" class="ml-10px" :disabled="!jsonValue"
-                @click="clearResultHandler">
+                @click="clearResultHandler" >
                 清空结果
               </n-button>
             </div>
@@ -127,7 +133,7 @@ const { HighLightJs } = useHeightLight(isDark);
 const { runFileRead, sheetNames, excelvalue, renderFileByNode, clearResult } =
   useReadExcel(exportNameValue);
 
-const { showMainWindow, hideMainWindow } = useUtools(
+const { showMainWindow, hideMainWindow,toJsonEdit } = useUtools(
   sheetNames,
   excelvalue,
   exportNameValue,
@@ -175,6 +181,10 @@ function fileChangeHandler(data) {
 function clearResultHandler() {
   // 清空json最原始数据
   clearResult()
+}
+
+function toJSONEditHandler(){
+  toJsonEdit(jsonValue.value)
 }
 
 onMounted(() => {

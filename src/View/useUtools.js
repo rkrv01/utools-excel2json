@@ -50,12 +50,19 @@ export default function (sheetNames, excelvalue, exportNameValue, renderFileByNo
         }
     }
 
+    /**前往json编辑器 */
+    function toJsonEdit(jsonData){
+        //content 为string类型
+        utools && utools.redirect('Json', jsonData)
+    }
+
     onMounted(() => {
         utools && initUtoolsEvent();
     })
 
     return {
         showMainWindow,
-        hideMainWindow
+        hideMainWindow,
+        toJsonEdit
     }
 }
